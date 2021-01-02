@@ -2,12 +2,15 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.logging.Level;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MyAmazingBot extends TelegramLongPollingBot {
-
     @Override
     public String getBotUsername() {
         return "onlineOrenburgBot";
@@ -34,19 +37,32 @@ public class MyAmazingBot extends TelegramLongPollingBot {
         }
     }
     public synchronized void sendMsg(Message message, String text) {
-        SendMessage sendMessage = new SendMessage();
+        SendMessage sendMessage = new SendMessage();//инициализация, отправляемого сообщения, создаем объект SendMessage библиотеки telegram
         sendMessage.enableMarkdown(true);//включаем возможность разметки
         sendMessage.setChatId(message.getChatId().toString());//устанавливаем id чата в который будем
-        sendMessage.setReplyToMessageId(message.getMessageId());
+        sendMessage.setReplyToMessageId(message.getMessageId());//установка id сообщения, на которое будем отвечать
         sendMessage.setText(text);
         try {
-             execute(sendMessage);
+            setButtons(sendMessage);//добавляем в отправляемое сообщение клавиатуру, созданную в нашем методе
+            execute(sendMessage);//непосредственная реализация отправки сообщения
         } catch (TelegramApiException e) {
             e.printStackTrace();
-        //    log.log(Level.SEVERE, "Exception: ", e.toString());
         }
     }
+    public void setButtons(SendMessage sendMessage){
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();//создаем объект клавиатуру
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);//устанавливаем разметку для нашей клавиатуры
+        replyKeyboardMarkup.setSelective(true);//устанавливаем параметр, который определяет вывод клавиатуры для всех пользователей (или для одного конкретного)
+        replyKeyboardMarkup.setResizeKeyboard(true);//возможность изменять клавиатуру
+        replyKeyboardMarkup.setOneTimeKeyboard(false);//скрывать или не скрывать клавиатуру после использования
+        KeyboardRow keyboardFirstRow = new KeyboardRow();//создание объекта строчки кнопок
+        keyboardFirstRow.add(new KeyboardButton("/help"));
+        keyboardFirstRow.add(new KeyboardButton("/settings"));
+        List<KeyboardRow> keyboardRowList= new ArrayList<>();//создаем List кнопок клавиатуры
+        keyboardRowList.add(keyboardFirstRow);//добавляем первую строчку кнопок
+        replyKeyboardMarkup.setKeyboard(keyboardRowList);//устанавливаем клавиатуру, определенную в List(е)
 
-    private void sendMessage(SendMessage sendMessage) {
+
+
     }
 }
