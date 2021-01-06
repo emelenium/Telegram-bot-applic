@@ -54,7 +54,7 @@ public class MyAmazingBot extends TelegramLongPollingBot {
         sendMessage.setReplyMarkup(replyKeyboardMarkup);//устанавливаем разметку для нашей клавиатуры
         replyKeyboardMarkup.setSelective(true);//устанавливаем параметр, который определяет вывод клавиатуры для всех пользователей (или для одного конкретного)
         replyKeyboardMarkup.setResizeKeyboard(true);//возможность изменять клавиатуру
-        replyKeyboardMarkup.setOneTimeKeyboard(false);//скрывать или не скрывать клавиатуру после использования
+        replyKeyboardMarkup.setOneTimeKeyboard(true);//скрывать или не скрывать клавиатуру после использования
         KeyboardRow keyboardFirstRow = new KeyboardRow();//создание объекта строчки кнопок
         keyboardFirstRow.add(new KeyboardButton("/help"));
         keyboardFirstRow.add(new KeyboardButton("/settings"));
